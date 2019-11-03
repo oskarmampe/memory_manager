@@ -10,11 +10,11 @@ class SingleStack
 {
 public:
 	typedef uint32_t U32;
-	typedef U32 Marker;
+	typedef unsigned char* Marker;
 
 	explicit SingleStack(U32);
 
-	unsigned char* alloc(U32);
+	Marker alloc(U32);
 
 	Marker getMarker();
 
@@ -23,6 +23,6 @@ public:
 	void clear();
 
 private:
-	unsigned char* base_pointer;
+	Marker base_pointer;
 	Marker top_marker;
 };

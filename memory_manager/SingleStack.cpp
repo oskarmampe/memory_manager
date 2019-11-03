@@ -24,14 +24,18 @@ SingleStack::SingleStack(U32 stackSize_bytes)
 	top_marker = 0;
 }
 
-unsigned char* SingleStack::alloc(U32 size_bytes)
+SingleStack::Marker SingleStack::alloc(U32 size_bytes)
 {
 	//
-	Marker temp_marker = top_marker;
-	std::cout << temp_marker;
-	top_marker += size_bytes;
-	std::cout << temp_marker;
-	return base_pointer + temp_marker;
+	if (top_marker == NULL)
+	{
+		top_marker = base_pointer + size_bytes;
+	} 
+	else
+	{
+		top_marker += size_bytes;
+	}
+	return top_marker;
 		
 }
 
@@ -51,6 +55,6 @@ void SingleStack::clear()
 {
 	//
 	top_marker = 0;
-	delete[] base_pointer; // cleanup
+	delete[] base_pointer;
 }
 

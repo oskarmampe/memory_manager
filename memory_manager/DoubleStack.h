@@ -16,7 +16,7 @@ public:
 	};
 
 	typedef uint32_t U32;
-	typedef U32 Marker;
+	typedef unsigned char* Marker;
 
 	explicit DoubleStack(U32);
 
@@ -32,6 +32,7 @@ public:
 
 private:
 	unsigned char* base_pointer;
+	U32 stack_size;
 	Marker top_marker;
 	Marker bottom_marker;
 };
