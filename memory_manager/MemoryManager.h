@@ -39,7 +39,7 @@ public:
 	void getFromPool();
 
 private:
-	std::vector<SingleStack> stacks;
-	std::vector<DoubleStack> dstacks;
-	std::vector<Pool> pools;
+	std::vector<SingleStack*> stacks;
+	std::vector<DoubleStack*> dstacks;
+	std::vector<Pool*> pools;
 };

@@ -25,4 +25,9 @@ private:
 	};
 
 	Node* head;
+
+	void initialise_linked_list();
+
+	U32 bsize;
+	U32 size;
 };

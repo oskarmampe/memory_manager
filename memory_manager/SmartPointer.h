@@ -10,7 +10,7 @@ public:
 		ptr = p;
 	}
 
-	~SmartPointer() { free(ptr); };
+	~SmartPointer() { delete ptr; };
 
 	T& operator * () { return *ptr; }
 

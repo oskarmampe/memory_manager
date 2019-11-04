@@ -29,7 +29,7 @@ SingleStack::Marker SingleStack::alloc(U32 size_bytes)
 	//
 	if (top_marker == NULL)
 	{
-		top_marker = base_pointer + size_bytes;
+		top_marker = base_pointer;
 	} 
 	else
 	{
