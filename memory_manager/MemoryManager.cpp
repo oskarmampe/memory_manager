@@ -12,37 +12,39 @@ void MemoryManager::shutDown()
 
 void MemoryManager::createStack(U32 stack_size)
 {
-	SingleStack* stack = new SingleStack(stack_size);
-	stacks.insert(stacks.end(), stack);
+	//SmartPointer<SingleStack> pointer(new SingleStack(stack_size));
+	//stacks.insert(stacks.end(), pointer);
 }
 
 void MemoryManager::createDoubleStack(U32 stack_size)
 {
-	DoubleStack* dstack = new DoubleStack(stack_size);
-	dstacks.insert(dstacks.end(), dstack);
+	//SmartPointer<DoubleStack> pointer(new DoubleStack(stack_size));
+	//dstacks.insert(dstacks.end(), pointer);
 }
 
 void MemoryManager::createPool(U32 type_size, U32 stack_size)
 {
-	Pool* pool = new Pool(type_size, stack_size);
-	pools.insert(pools.end(), pool);
+	//SmartPointer<Pool> pointer(new Pool(type_size, stack_size));
+	//pools.insert(pools.end(), pointer);
 }
 
-
-void MemoryManager::putIntoStack() 
+template <class T>
+void MemoryManager::putIntoStack(T obj) 
 {
-	SingleStack* stack = stacks.at(0);
-	stack->alloc(200);
-	unsigned char* pointer = stack->getMarker();
-	*pointer = '1';
+	SmartPointer<SingleStack> stack = stacks.at(0);
+	stack->alloc(sizeof(obj));
+	T* pointer = stack->getMarker();
+	*pointer = obj;
 }
 
-void MemoryManager::putIntoDoubleStack() 
+template <class T>
+void MemoryManager::putIntoDoubleStack(T obj, DoubleStack::POSITION stack) 
 {
 	//
 }
 
-void MemoryManager::putIntoPool() 
+template <class T>
+void MemoryManager::putIntoPool(T obj) 
 {
 	//
 }

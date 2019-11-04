@@ -2,6 +2,7 @@
 #include "SingleStack.h"
 #include "DoubleStack.h"
 #include "Pool.h"
+#include "SmartPointer.h"
 #include <vector>
 //
 // MEMORY MANAGER
@@ -30,16 +31,21 @@ public:
 	void createDoubleStack(U32 stack_size);
 	void createPool(U32 type_size, U32 stack_size);
 
-	void putIntoDoubleStack();
-	void putIntoPool();
-	void putIntoStack();
+	template <class T>
+	void putIntoDoubleStack(T, DoubleStack::POSITION);
+
+	template <class T>
+	void putIntoPool(T);
+
+	template <class T>
+	void putIntoStack(T);
 
 	void getFromStack();
 	void getFromDoubleStack();
 	void getFromPool();
 
 private:
-	std::vector<SingleStack*> stacks;
-	std::vector<DoubleStack*> dstacks;
-	std::vector<Pool*> pools;
+	std::vector<SmartPointer<SingleStack>> stacks;
+	std::vector<SmartPointer<DoubleStack>> dstacks;
+	std::vector<SmartPointer<Pool>> pools;
 };

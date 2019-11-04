@@ -7,6 +7,8 @@ int main()
 {
 	SingleStack stack(12);
 	DoubleStack dstack(20);
+	int *x = new int{ 0 };
+	SmartPointer<int> pointer(x);
 
 	int* test = (int*) stack.alloc(8);
 

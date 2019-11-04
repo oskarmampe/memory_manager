@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Counter.h" />
     <ClInclude Include="DoubleStack.h" />
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Pool.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="Pool.cpp" />
     <ClCompile Include="SingleStack.cpp" />
+    <ClCompile Include="SmartPointer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

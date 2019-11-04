@@ -1,20 +1,24 @@
 #pragma once
+#include "Counter.h"
+
 template <class T>
 class SmartPointer
 {
-	T* ptr;
-
 public:
-	explicit SmartPointer(T* p = NULL)
-	{
-		ptr = p;
-	}
+	SmartPointer(T* p);
 
-	~SmartPointer() { delete ptr; };
+	virtual ~SmartPointer();
 
-	T& operator * () { return *ptr; }
+	SmartPointer(const SmartPointer<T>& other);
 
-	T* operator -> () { return ptr; }
+	SmartPointer<T>& SmartPointer<T>::operator = (const SmartPointer<T>&);
 
-	T* operator + (int x) { return ptr + x; }
+	T& operator * ();
+
+	T* operator -> ();
+
+	T* operator + (int x);
+private:
+	Counter* reference_count = nullptr;
+	T* ptr;
 };

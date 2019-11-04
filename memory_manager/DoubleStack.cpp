@@ -25,7 +25,6 @@ DoubleStack::DoubleStack(U32 stackSize_bytes)
 
 unsigned char* DoubleStack::alloc(U32 size_bytes, POSITION stack = TOP_STACK)
 {
-	Marker temp_marker;
 	if (stack == TOP_STACK)
 	{
 		top_marker -= size_bytes;
@@ -35,6 +34,11 @@ unsigned char* DoubleStack::alloc(U32 size_bytes, POSITION stack = TOP_STACK)
 	{
 		bottom_marker += size_bytes;
 		return bottom_marker;
+	} 
+	else
+	{
+		std::cout << "ERROR: DOUBLE STACK LOCATION NOT SPECIFIED.";
+		return nullptr;
 	}
 }
 
