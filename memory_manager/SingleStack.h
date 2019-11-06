@@ -14,6 +14,8 @@ public:
 
 	explicit SingleStack(U32);
 
+	virtual ~SingleStack();
+
 	Marker alloc(U32);
 
 	Marker getMarker();

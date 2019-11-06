@@ -5,7 +5,12 @@ template <typename T>
 class SmartPointer
 {
 public:
-	
+
+	SmartPointer()
+	{
+
+	}
+
 	SmartPointer(T* p)
 	{
 		ptr = p;
@@ -23,12 +28,11 @@ public:
 				delete reference_count;
 				delete ptr;
 
-				
+
 				reference_count = nullptr;
 				ptr = nullptr;
 			}
 		}
-		delete ptr;
 	}
 
 	SmartPointer(const SmartPointer<T>& other)
@@ -39,23 +43,27 @@ public:
 		reference_count->incr();
 	}
 
+	int getCount()
+	{
+		return reference_count->getCount();
+	}
+
 	SmartPointer<T>& operator = (const SmartPointer<T>& other)
 	{
-		if (this != &other)
+		if (this != &other)//avoid self assignment
 		{
 			if (reference_count)
 			{
 				reference_count->decr();
-				int count = reference_count->getCount();
-				if (count == 0)
+				if (reference_count->getCount() == 0)
 				{
 					delete reference_count;
 					delete ptr;
 				}
-				ptr = other.ptr;
-				reference_count = other.reference_count;
-				reference_count->incr();
 			}
+			ptr = other.ptr;
+			reference_count = other.reference_count;
+			reference_count->incr();
 		}
 		return *this;
 	}
@@ -77,5 +85,5 @@ public:
 	}
 private:
 	Counter* reference_count = nullptr;
-	T* ptr;
+	T* ptr = nullptr;
 };

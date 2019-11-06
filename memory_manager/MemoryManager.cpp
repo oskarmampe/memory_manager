@@ -24,8 +24,8 @@ void MemoryManager::createDoubleStack(U32 stack_size)
 
 void MemoryManager::createPool(U32 type_size, U32 stack_size)
 {
-	SmartPointer<Pool> pointer(new Pool(type_size, stack_size));
-	pools.insert(pools.end(), pointer);
+	/*SmartPointer<Pool> pointer(new Pool(type_size, stack_size));
+	pools.insert(pools.end(), pointer);*/
 }
 
 template <class T>
