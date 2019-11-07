@@ -47,5 +47,5 @@ public:
 private:
 	std::vector<SmartPointer<SingleStack>> stacks;
 	std::vector<SmartPointer<DoubleStack>> dstacks;
-	/*std::vector<SmartPointer<Pool>> pools;*/
+	std::vector<SmartPointer<Pool>> pools;
 };

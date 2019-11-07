@@ -15,6 +15,12 @@ int main()
 	// ------------------------ STACK TEST ------------------------
 	// ------------------------------------------------------------
 	{
+		// INITIALIZATION
+		// ALLOCATION
+		// CLEAR
+		// FREE
+		// OVERASSIGNING
+		// CLEANUP/SCOPE TEST
 		SmartPointer<SingleStack> stack(new SingleStack(20));
 		{
 			// DON'T USE SMART POINTERS FOR INDIVIDUAL POINTERS USE IT FOR ALLOCATORS
@@ -93,6 +99,12 @@ int main()
 	// ------------------------ DOUBLE STACK TEST ------------------------
 	// -------------------------------------------------------------------
 
+		// INITIALIZATION
+		// ALLOCATION
+		// CLEAR
+		// FREE
+		// OVERASSIGNING
+		// CLEANUP/SCOPE TEST
 
 
 	//{
@@ -176,6 +188,12 @@ int main()
 	// -----------------------------------------------------------
 	// ------------------------ POOL TEST ------------------------
 	// -----------------------------------------------------------
+			// INITIALIZATION
+		// ALLOCATION
+		// CLEAR
+		// FREE
+		// OVERASSIGNING
+		// CLEANUP/SCOPE TEST
 	int* dtest1 = (int*)pool->alloc();
 	*dtest1 = 1;
 

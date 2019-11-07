@@ -17,7 +17,7 @@
 
 DoubleStack::DoubleStack(U32 stackSize_bytes)
 {
-	base_pointer = (unsigned char*) malloc(stackSize_bytes);
+	base_pointer = new unsigned char[stackSize_bytes];
 	stack_size = stackSize_bytes;
 	top_marker = base_pointer + stackSize_bytes;
 	bottom_marker = base_pointer;

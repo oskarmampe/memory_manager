@@ -20,7 +20,7 @@ public:
 
 	explicit DoubleStack(U32);
 
-	unsigned char* alloc(U32, POSITION);
+	Marker alloc(U32, POSITION);
 
 	Marker getMarker(POSITION);
 
@@ -31,8 +31,9 @@ public:
 
 
 private:
-	unsigned char* base_pointer;
+	Marker base_pointer;
 	U32 stack_size;
 	Marker top_marker;
 	Marker bottom_marker;
+	U32 size_allocated;
 };

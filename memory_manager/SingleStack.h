@@ -27,4 +27,5 @@ public:
 private:
 	Marker base_pointer;
 	Marker top_marker;
+	U32 size_allocated;
 };
