@@ -24,6 +24,8 @@ public:
 
 	void clear();
 
+	U32 getFreeSize();
+
 private:
 	Marker base_pointer;
 	Marker top_marker;

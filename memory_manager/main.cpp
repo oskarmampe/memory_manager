@@ -2,6 +2,7 @@
 #include "DoubleStack.h"
 #include "Pool.h"
 #include "SmartPointer.h"
+#include "MemoryManager.h"
 #include <iostream>
 
 int main()
@@ -9,6 +10,21 @@ int main()
 	int* x = new int{ 0 };
 	
 	SmartPointer<DoubleStack> dstack(new DoubleStack(24));
+
+	{
+		MemoryManager mem = {};
+		mem.createStack(8);
+		mem.putIntoStack(1);
+		mem.putIntoStack('a');
+		mem.putIntoStack(3);
+		int x = mem.getFromStack<int>();
+		int y = mem.takeFromStack<int>();
+		char z = mem.getFromStack<char>();
+		std::cout << std::endl << "MEMORY VAL " << x << std::endl;
+		std::cout << std::endl << "MEMORY VAL " << y << std::endl;
+		std::cout << std::endl << "MEMORY VAL " << z << std::endl;
+
+	}
 
 
 	// ------------------------------------------------------------
