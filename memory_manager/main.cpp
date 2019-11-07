@@ -9,7 +9,7 @@ int main()
 	int* x = new int{ 0 };
 	
 	SmartPointer<DoubleStack> dstack(new DoubleStack(24));
-	SmartPointer<Pool<int>> pool(new Pool<int>(5));
+
 
 	// ------------------------------------------------------------
 	// ------------------------ STACK TEST ------------------------
@@ -194,28 +194,31 @@ int main()
 		// FREE
 		// OVERASSIGNING
 		// CLEANUP/SCOPE TEST
-	int* dtest1 = (int*)pool->alloc();
-	*dtest1 = 1;
+	{
+		SmartPointer<Pool> pool(new Pool(sizeof(int), 5));
+		int* dtest1 = (int*)pool->alloc();
+		*dtest1 = 1;
 
-	int* dtest2 = (int*)pool->alloc();
-	*dtest2 = 2;
+		int* dtest2 = (int*)pool->alloc();
+		*dtest2 = 2;
 
-	int* dtest3 = (int*)pool->alloc();
-	*dtest3 = 3;
+		int* dtest3 = (int*)pool->alloc();
+		*dtest3 = 3;
 
-	std::cout << *dtest1 << *dtest2 << *dtest3;
+		std::cout << *dtest1 << *dtest2 << *dtest3;
 
-	pool->free(dtest1);
+		pool->free((unsigned char*)dtest1);
 
-	SmartPointer<Pool<int>> bvcx = pool;
+		SmartPointer<Pool> bvcx = pool;
 
-	std::cout << std::endl << "pointer count: " << pool.getCount() << std::endl;
+		std::cout << std::endl << "pointer count: " << pool.getCount() << std::endl;
 
 
-	std::cout << *dtest1 << *dtest2 << *dtest3;
+		std::cout << *dtest1 << *dtest2 << *dtest3;
 
-	pool->clear();
+		pool->clear();
 
-	std::cout << *dtest1 << *dtest2 << *dtest3;
+		std::cout << *dtest1 << *dtest2 << *dtest3;
+	}
 	return 0;
 }

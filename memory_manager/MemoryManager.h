@@ -4,6 +4,7 @@
 #include "Pool.h"
 #include "SmartPointer.h"
 #include <vector>
+#include <tuple>
 //
 // MEMORY MANAGER
 //
@@ -40,12 +41,19 @@ public:
 	template <class T>
 	void putIntoStack(T);
 
-	void getFromStack();
-	void getFromDoubleStack();
-	void getFromPool();
+	template <class T>
+	T getFromStack();
+
+	template <class T>
+	T getFromDoubleStack();
+	
+	template <class T>
+	T getFromPool();
 
 private:
 	std::vector<SmartPointer<SingleStack>> stacks;
+	std::vector<SmartPointer<SingleStack::Marker>> stacksMarkers;
 	std::vector<SmartPointer<DoubleStack>> dstacks;
+	std::vector<SmartPointer<std::tuple<DoubleStack::Marker, DoubleStack::Marker>>> dstacksMarkers;
 	std::vector<SmartPointer<Pool>> pools;
 };

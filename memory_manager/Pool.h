@@ -8,6 +8,7 @@ public:
 	typedef uint32_t U32;
 
 	explicit Pool(U32, U32);
+	virtual ~Pool();
 	unsigned char* alloc();
 	void free(unsigned char*);
 

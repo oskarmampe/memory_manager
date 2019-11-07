@@ -3,13 +3,17 @@
 
 Pool::Pool(U32 size_byte, U32 no_of_elements)
 {
-    size = no_of_elements*byte_size;
+    size = no_of_elements*size_byte;
 	base_pointer = new unsigned char[size];
     byte_size = size_byte;
 	initialise_linked_list();
 }
 
-
+Pool::~Pool()
+{
+	delete[] base_pointer;
+	base_pointer = nullptr;
+}
 
 unsigned char* Pool::alloc()
 {

@@ -32,9 +32,9 @@ template <class T>
 void MemoryManager::putIntoStack(T obj) 
 {
 	SmartPointer<SingleStack> stack = stacks.at(0);
-	stack->alloc(sizeof(obj));
-	T* pointer = stack->getMarker();
-	*pointer = obj;
+	SingleStack::Marker marker = stack->getMarker();
+	T* result = stack->alloc(sizeof(obj));
+	*result = obj;
 }
 
 template <class T>
@@ -49,16 +49,22 @@ void MemoryManager::putIntoPool(T obj)
 	//
 }
 
-void MemoryManager::getFromStack() 
+template <class T>
+T MemoryManager::getFromStack() 
 {
 	// Get all the data from the top to the marker.
+	SmartPointer<SingleStack> stack = stacks.at(0);
+	SingleStack::Marker marker = stack->getMarker();
+	return *marker;
 }
 
+template <class T>
 void MemoryManager::getFromDoubleStack()
 {
 	//
 }
 
+template <class T>
 void MemoryManager::getFromPool() 
 {
 	//
