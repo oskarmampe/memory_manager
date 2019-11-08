@@ -12,18 +12,22 @@ void MemoryManager::shutDown()
 
 void MemoryManager::createStack(U32 stack_size)
 {
-	SmartPointer<SingleStack> pointer(new SingleStack(stack_size));
-	stacks.insert(stacks.end(), pointer);
-}
+	stack = { new SingleStack(stack_size) };
+	}
 
 void MemoryManager::createDoubleStack(U32 stack_size)
 {
-	SmartPointer<DoubleStack> pointer(new DoubleStack(stack_size));
-	dstacks.insert(dstacks.end(), pointer);
+	dstack = { new DoubleStack(stack_size) };
 }
 
 void MemoryManager::createPool(U32 type_size, U32 stack_size)
 {
-	SmartPointer<Pool> pointer(new Pool(type_size, stack_size));
-	pools.insert(pools.end(), pointer);
+	pool = { new Pool(type_size, stack_size) };
 }
+
+void MemoryManager::resetStack(U32 stack_size)
+{
+
+}
+void MemoryManager::resetDoubleStack(U32 stack_size){}
+void MemoryManager::resetPool(U32 type_size, U32 stack_size){}

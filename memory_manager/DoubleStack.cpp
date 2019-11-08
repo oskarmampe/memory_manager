@@ -21,25 +21,38 @@ DoubleStack::DoubleStack(U32 stackSize_bytes)
 	stack_size = stackSize_bytes;
 	top_marker = base_pointer + stackSize_bytes;
 	bottom_marker = base_pointer;
+	size_free = stackSize_bytes;
 }
 
-unsigned char* DoubleStack::alloc(U32 size_bytes, POSITION stack = TOP_STACK)
+DoubleStack::~DoubleStack()
+{
+	delete[] base_pointer;
+	base_pointer = nullptr;
+}
+
+unsigned char* DoubleStack::alloc(U32 size_bytes, POSITION stack)
 {
 	if (stack == TOP_STACK)
 	{
-		top_marker -= size_bytes;
+		if (top_marker == NULL)
+			top_marker = base_pointer + stack_size;
+		else
+			top_marker -= size_bytes;
+
+		size_free -= size_bytes;
 		return top_marker;
 	}
-	else if (stack == BOTTOM_STACK)
-	{
-		bottom_marker += size_bytes;
-		return bottom_marker;
-	} 
 	else
 	{
-		std::cout << "ERROR: DOUBLE STACK LOCATION NOT SPECIFIED.";
-		return nullptr;
-	}
+		if (bottom_marker == NULL)
+			bottom_marker = base_pointer;
+		else
+			bottom_marker += size_bytes;
+
+		size_free -= size_bytes;
+		return bottom_marker - size_bytes;
+	} 
+
 }
 
 DoubleStack::Marker DoubleStack::getMarker(POSITION stack)
@@ -53,6 +66,8 @@ void DoubleStack::freeToMarker(DoubleStack::Marker marker, POSITION stack)
 		top_marker = marker;
 	else
 		bottom_marker = marker;
+
+	size_free = (top_marker - (stack_size + base_pointer)) + (bottom_marker - base_pointer);
 }
 
 void DoubleStack::clear()
@@ -61,3 +76,7 @@ void DoubleStack::clear()
 	bottom_marker = base_pointer;
 }
 
+DoubleStack::U32 DoubleStack::getFreeSize()
+{
+	return size_free;
+}

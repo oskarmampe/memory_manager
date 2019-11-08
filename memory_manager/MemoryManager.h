@@ -32,10 +32,28 @@ public:
 	void createDoubleStack(U32 stack_size);
 	void createPool(U32 type_size, U32 stack_size);
 
-	template <class T>
-	void putIntoDoubleStack(T, DoubleStack::POSITION)
-	{
+	void resetStack(U32 stack_size);
+	void resetDoubleStack(U32 stack_size);
+	void resetPool(U32 type_size, U32 stack_size);
 
+	template <class T>
+	void putIntoDoubleStack(T obj, DoubleStack::POSITION stack_position)
+	{
+		if (dstack->getFreeSize() < sizeof(obj))
+		{
+			std::cout << "Stack ran out of space.";
+			return;
+		}
+
+		if (stack_position == DoubleStack::BOTTOM_STACK)
+			dstackBottomMarkers.insert(dstackBottomMarkers.end(), dstack->getMarker(stack_position));
+
+		T* result = (T*)dstack->alloc(sizeof(obj), stack_position);
+
+		if (stack_position == DoubleStack::TOP_STACK)
+			dstackTopMarkers.insert(dstackTopMarkers.end(), dstack->getMarker(stack_position));
+
+		*result = obj;
 	}
 
 	template <class T>
@@ -47,14 +65,14 @@ public:
 	template <class T>
 	void putIntoStack(T obj)
 	{
-		SmartPointer<SingleStack> stack = stacks.at(0);
+		std::cout << "Stack size: " << stack->getFreeSize() << std::endl;
 		if (stack->getFreeSize() < sizeof(obj))
 		{
-			std::cout << "Stack ran out of space.";
+			std::cout << "Stack ran out of space." << std::endl;
 			return;
 		}
 		SingleStack::Marker marker = stack->getMarker();
-		stacksMarkers.insert(stacksMarkers.end(), marker);
+		stackMarkers.insert(stackMarkers.end(), marker);
 		T* result = (T*) stack->alloc(sizeof(obj));
 		*result = obj;
 	}
@@ -63,16 +81,15 @@ public:
 	T getFromStack()
 	{
 		// Get all the data from the top to the marker.
-		T* marker = (T*)stacksMarkers.at(0);
+		T* marker = (T*)stackMarkers.at(0);
 		return *marker;
 	}
 
 	template <class T>
-	T getFromDoubleStack(DoubleStack::POSITION stack)
+	T getFromDoubleStack(DoubleStack::POSITION stack_position)
 	{
 		//
-		SmartPointer<DoubleStack> dstack = dstacks.at(0);
-		DoubleStack::Marker marker = dstack->getMarker(stack);
+		DoubleStack::Marker marker = dstack->getMarker(stack_position);
 		return *marker;
 	}
 	
@@ -87,17 +104,29 @@ public:
 	T takeFromStack()
 	{
 		// Get all the data from the top to the marker.
-		SingleStack::Marker marker = stacksMarkers.at(0);
-		SmartPointer<SingleStack> stack = stacks.at(0);
-		stacksMarkers.erase(stacksMarkers.begin());
+		SingleStack::Marker marker = stackMarkers.at(0);
+		stackMarkers.erase(stackMarkers.begin());
 		stack->freeToMarker(marker);
 		return *((T*)marker);
 	}
 
 	template <class T>
-	T takeFromDoubleStack(DoubleStack::POSITION stack)
+	T takeFromDoubleStack(DoubleStack::POSITION stack_position)
 	{
+		DoubleStack::Marker marker;
 
+		if (stack_position == DoubleStack::TOP_STACK) 
+		{
+			marker = dstackTopMarkers.at(0);
+			dstack->freeToMarker(marker + sizeof(T), stack_position);
+		}
+		else
+		{
+			marker = dstackBottomMarkers.at(0);
+			dstack->freeToMarker(marker, stack_position);
+		}
+
+		return *((T*)marker);
 	}
 
 	template <class T>
@@ -108,9 +137,10 @@ public:
 
 
 private:
-	std::vector<SmartPointer<SingleStack>> stacks;
-	std::vector<SingleStack::Marker> stacksMarkers;
-	std::vector<SmartPointer<DoubleStack>> dstacks;
-	std::vector<SmartPointer<std::tuple<DoubleStack::Marker, DoubleStack::Marker>>> dstacksMarkers;
-	std::vector<SmartPointer<Pool>> pools;
+	SmartPointer<SingleStack> stack;
+	SmartPointer<Pool> pool;
+	SmartPointer<DoubleStack> dstack;
+	std::vector<SingleStack::Marker> stackMarkers;
+	std::vector<DoubleStack::Marker> dstackTopMarkers;
+	std::vector<DoubleStack::Marker> dstackBottomMarkers;
 };

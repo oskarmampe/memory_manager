@@ -20,6 +20,8 @@ public:
 
 	explicit DoubleStack(U32);
 
+	virtual ~DoubleStack();
+
 	Marker alloc(U32, POSITION);
 
 	Marker getMarker(POSITION);
@@ -28,12 +30,12 @@ public:
 
 	void clear();
 
-
+	U32 getFreeSize();
 
 private:
 	Marker base_pointer;
 	U32 stack_size;
 	Marker top_marker;
 	Marker bottom_marker;
-	U32 size_allocated;
+	U32 size_free;
 };

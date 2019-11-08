@@ -24,6 +24,9 @@ int main()
 		std::cout << std::endl << "MEMORY VAL " << y << std::endl;
 		std::cout << std::endl << "MEMORY VAL " << z << std::endl;
 
+		mem.createDoubleStack(8);
+		mem.putIntoDoubleStack(2, DoubleStack::TOP_STACK);
+
 	}
 
 
