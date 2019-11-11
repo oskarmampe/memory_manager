@@ -110,13 +110,16 @@ int main()
 			std::cout << std::endl << "------------------ MEMORY MANAGER POOL TEST ------------------" << std::endl;
 
 			//Memory pool test
-
 			mem.createPool(sizeof(int), 2);
 
+			//How to put an object in
 			mem.putIntoPool<int>(3);
 			mem.putIntoPool<int>(76);
 			mem.putIntoPool<int>(123);
 
+			// Pool acts as an array. Memory is being allocated and then a pointer is put into a vector.
+			// Therefore, to retrieve an element simply input an index. All elements are appended to the end of the vector.
+			// Take 'frees' the node and returns the data in it, whilst get just returns the data.
 			int pa = mem.takeFromPool<int>(0);
 			int pv = mem.getFromPool<int>(0);
 
@@ -151,6 +154,8 @@ int main()
 	// DON'T USE SMART POINTERS FOR INDIVIDUAL POINTERS USE IT FOR ALLOCATORS
 	// This is because smart pointer free memory for the heap.
 	// Which is not desired as it should be up to allocators to do that.
+	
+	std::cout << std::endl << "------------------ STACK ALLOCATOR TEST ------------------" << std::endl;
 
 	// Create a new scope to test if SmartPointer correctly cleans up once references drop to 0.
 	{
@@ -191,7 +196,7 @@ int main()
 
 			*test = 1.5;
 
-			std::cout << "SECOND STACK TEST: " << *test << std::endl;
+			std::cout << "THIRD STACK TEST: " << *test << std::endl;
 
 			stack->freeToMarker(smarker);
 		}
@@ -209,15 +214,15 @@ int main()
 
 			*test2 = 543.0;
 
-			std::cout << "THIRD STACK TEST: " << *test1 << std::endl;
-			std::cout << "THIRD STACK TEST: " << *test2 << std::endl;
+			std::cout << "FOURTH STACK TEST: " << *test1 << std::endl;
+			std::cout << "FOURTH STACK TEST: " << *test2 << std::endl;
 
 			stack->freeToMarker(marker);
 			double* test = (double*)stack->alloc(sizeof(double));
 
 			*test = 234.123;
 
-			std::cout << "THIRD STACK TEST: " << *test << std::endl;
+			std::cout << "FOURTH STACK TEST: " << *test << std::endl;
 		}
 
 	}//  End of scope to check if smart pointer correctly destructs.
@@ -235,169 +240,122 @@ int main()
 	// ------------------------ DOUBLE STACK TEST ------------------------
 	// -------------------------------------------------------------------
 
-		// INITIALIZATION
-		// ALLOCATION
-		// CLEAR
-		// FREE
-		// OVERASSIGNING
-		// CLEANUP/SCOPE TEST
+	std::cout << std::endl << "------------------ DOUBLESTACK ALLOCATOR TEST ------------------" << std::endl;
 
 		// Create a new scope to test if SmartPointer correctly cleans up once references drop to 0.
 	{
 
 		// Create a smart pointer to the stack
-		SmartPointer<SingleStack> stack(new SingleStack(12));
+		SmartPointer<DoubleStack> dstack(new DoubleStack(12));
 
-		// Test whether you can allocate to stack 
+		// Test whether you can allocate to top stack 
 		{
 
-			SingleStack::Marker smarker = stack->getMarker();
-			int* test = (int*)stack->alloc(sizeof(int));
+			DoubleStack::Marker smarker = dstack->getMarker(DoubleStack::TOP_STACK);
+			int* test = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
 
 			*test = 1;
 
-			std::cout << "FIRST STACK TEST: " << *test << std::endl;
+			std::cout << "FIRST DOUBLESTACK TEST: " << *test << std::endl;
+
+			dstack->freeToMarker(smarker, DoubleStack::TOP_STACK);
 		}
+
+		// Test whether you can allocate to bottom stack 
+		{
+
+			DoubleStack::Marker smarker = dstack->getMarker(DoubleStack::BOTTOM_STACK);
+			int* test = (int*)dstack->alloc(sizeof(int), DoubleStack::BOTTOM_STACK);
+
+			*test = 1;
+
+			std::cout << "SECOND DOUBLESTACK TEST: " << *test << std::endl;
+			dstack->freeToMarker(smarker, DoubleStack::BOTTOM_STACK);
+		}
+
 
 		// Test whether you can allocate different types to stack.
 		// Also check if the marker goes up correctly.
 
 		{
-			SingleStack::Marker smarker = stack->getMarker();
-			double* test = (double*)stack->alloc(sizeof(double));
+			DoubleStack::Marker smarker = dstack->getMarker(DoubleStack::TOP_STACK);
+			double* test = (double*)dstack->alloc(sizeof(double), DoubleStack::TOP_STACK);
+			int* test1 = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
 
 			*test = 1.5;
+			*test1 = 1.5;
 
-			std::cout << "SECOND STACK TEST: " << *test << std::endl;
+			std::cout << "THIRD DOUBLESTACK TEST: " << *test << std::endl;
+			std::cout << "THIRD DOUBLESTACK TEST: " << *test1 << std::endl;
+		}
+
+		// Test whether you can allocate to both stacks
+		{
+
+			DoubleStack::Marker tmarker = dstack->getMarker(DoubleStack::TOP_STACK);
+			DoubleStack::Marker bmarker = dstack->getMarker(DoubleStack::TOP_STACK);
+
+			int* test = (int*)dstack->alloc(sizeof(int), DoubleStack::BOTTOM_STACK);
+			int* test1 = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
+
+			*test = 1;
+
+			std::cout << "FOURTH DOUBLESTACK TEST: " << *test << std::endl;
+			std::cout << "FOURTH DOUBLESTACK TEST: " << *test1 << std::endl;
+
+			dstack->freeToMarker(bmarker, DoubleStack::BOTTOM_STACK);
+			dstack->freeToMarker(tmarker, DoubleStack::TOP_STACK);
 		}
 
 
 		// Test whether you can free the entire stack.
 		{
-			stack->clear();
+			dstack->clear();
 
-			SingleStack::Marker smarker = stack->getMarker();
-			double* test = (double*)stack->alloc(sizeof(double));
+			SingleStack::Marker smarker = dstack->getMarker(DoubleStack::TOP_STACK);
+			double* test = (double*)dstack->alloc(sizeof(double), DoubleStack::TOP_STACK);
 
 			*test = 1.5;
 
-			std::cout << "SECOND STACK TEST: " << *test << std::endl;
+			std::cout << "THIRD DOUBLESTACK TEST: " << *test << std::endl;
 
-			stack->freeToMarker(smarker);
+			dstack->freeToMarker(smarker, DoubleStack::TOP_STACK);
 		}
 
 		// Test whether you can free and then allocate something new
 
 		{
-			SingleStack::Marker marker = stack->getMarker();
+			DoubleStack::Marker marker = dstack->getMarker(DoubleStack::TOP_STACK);
 
-			int* test1 = (int*)stack->alloc(sizeof(int));
+			int* test1 = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
 
 			*test1 = 3;
 
-			double* test2 = (double*)stack->alloc(sizeof(double));
+			double* test2 = (double*)dstack->alloc(sizeof(double), DoubleStack::TOP_STACK);
 
 			*test2 = 543.0;
 
-			std::cout << "THIRD STACK TEST: " << *test1 << std::endl;
-			std::cout << "THIRD STACK TEST: " << *test2 << std::endl;
+			std::cout << "FOURTH DOUBLESTACK TEST: " << *test1 << std::endl;
+			std::cout << "FOURTH DOUBLESTACK TEST: " << *test2 << std::endl;
 
-			stack->freeToMarker(marker);
-			double* test = (double*)stack->alloc(sizeof(double));
+			dstack->freeToMarker(marker);
+			double* test = (double*)dstack->alloc(sizeof(double), DoubleStack::TOP_STACK);
 
 			*test = 234.123;
 
-			std::cout << "THIRD STACK TEST: " << *test << std::endl;
+			std::cout << "FOURTH DOUBLESTACK TEST: " << *test << std::endl;
 		}
 
 	}//  End of scope to check if smart pointer correctly destructs.
 
 
-	SmartPointer<SingleStack> stack(new SingleStack(sizeof(int)));
-	int* test = (int*)stack->alloc(sizeof(int));
+	SmartPointer<DoubleStack> dstack(new DoubleStack(sizeof(int)));
+	int* test = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
 
 	*test = 1;
 
-	std::cout << "LAST STACK TEST: " << *test << std::endl;
+	std::cout << "LAST DOUBLESTACK TEST: " << *test << std::endl;
 
-
-	//{
-	//	//int* dtest =;
-	//	DoubleStack::Marker dstack_marker = dstack->getMarker(DoubleStack::TOP_STACK);
-	//	SmartPointer<int> point_test((int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK));
-
-	//	
-
-	//	
-
-	//	*point_test = 1;
-
-	//	dstack->freeToMarker(dstack_marker, DoubleStack::TOP_STACK);
-	//}
-	
-
-
-	//*(dtest - 1) = 2;
-	//*(dtest - 2) = 3;
-
-	//std::cout << *dtest << *(dtest - 1) << *(dtest - 2);
-
-	//dstack->freeToMarker(0, DoubleStack::TOP_STACK);
-
-	//SmartPointer<DoubleStack> vcx = dstack;
-
-	//std::cout << std::endl << "pointer count: " << dstack.getCount() << std::endl;
-
-
-	//std::cout << *dtest << *(dtest - 1) << *(dtest - 2);
-
-	//dstack->clear();
-
-	//std::cout << *dtest << *(dtest - 1) << *(dtest - 2);
-
-
-	//int* dtestz = (int*)dstack->alloc(12, DoubleStack::TOP_STACK);
-
-	//*dtestz = 1;
-	//*(dtestz - 1) = 2;
-	//*(dtestz - 2) = 3;
-
-	//std::cout << *dtestz << *(dtestz - 1) << *(dtestz - 2);
-
-	//dstack->freeToMarker(0, DoubleStack::TOP_STACK);
-
-	//SmartPointer<DoubleStack> mnb = dstack;
-
-	//std::cout << std::endl << "pointer count: " << dstack.getCount() << std::endl;
-
-
-	//std::cout << *dtestz << *(dtestz - 1) << *(dtestz - 2);
-
-	//dstack->clear();
-
-	//std::cout << *dtestz << *(dtestz - 1) << *(dtestz - 2);
-
-	SmartPointer<DoubleStack> dstack(new DoubleStack(20));
-
-	int* dtestb = (int*)dstack->alloc(12, DoubleStack::BOTTOM_STACK);
-
-	*dtestb = 1;
-	*(dtestb + 1) = 2;
-	*(dtestb + 2) = 3;
-
-	std::cout << *dtestb << *(dtestb + 1) << *(dtestb + 2);
-
-	dstack->freeToMarker(0, DoubleStack::BOTTOM_STACK);
-
-	SmartPointer<DoubleStack> bvc = dstack;
-
-	std::cout << std::endl << "pointer count: " << dstack.getCount() << std::endl;
-
-	std::cout << *dtestb << *(dtestb + 1) << *(dtestb + 2);
-
-	dstack->clear();
-
-	std::cout << *dtestb << *(dtestb + 1) << *(dtestb + 2);
 
 	// -----------------------------------------------------------
 	// ------------------------ POOL TEST ------------------------
