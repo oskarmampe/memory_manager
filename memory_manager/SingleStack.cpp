@@ -51,7 +51,7 @@ SingleStack::Marker SingleStack::getMarker()
 void SingleStack::freeToMarker(SingleStack::Marker marker)
 {
 	top_marker = marker;
-	size_free = top_marker - base_pointer;
+	size_free = (U32)(top_marker - base_pointer);
 }
 
 

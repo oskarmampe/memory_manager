@@ -24,11 +24,17 @@ DoubleStack::~DoubleStack()
 // Allocates memory by returning the correct pointer.
 unsigned char* DoubleStack::alloc(U32 size_bytes, POSITION stack)
 {
+	// Validation
+	if (size_bytes > size_free)
+	{
+		std::cout << "DoubleStack error: not enough space. Nothing has been allocated.";
+		return nullptr;
+	}
 	// If the stack being allocated to is top stack then the marker needs to be moved down.
 	if (stack == TOP_STACK)
 	{
 		if (top_marker == NULL)
-			top_marker = base_pointer + stack_size;
+			top_marker = base_pointer + stack_size - size_bytes;
 		else
 			top_marker -= size_bytes;
 
@@ -58,11 +64,33 @@ DoubleStack::Marker DoubleStack::getMarker(POSITION stack)
 void DoubleStack::freeToMarker(DoubleStack::Marker marker, POSITION stack)
 {
 	if (stack == TOP_STACK)
-		top_marker = marker;
+	{
+		if (marker <= bottom_marker)
+		{
+			std::cout << "DoubleStack error: Invalid marker move.";
+			return;
+		}
+		else
+		{
+			top_marker = marker;
+		}
+	}
 	else
-		bottom_marker = marker;
-
-	size_free = (top_marker - (stack_size + base_pointer)) + (bottom_marker - base_pointer);
+	{
+		if (marker >= top_marker)
+		{
+			std::cout << "DoubleStack error: Invalid marker move.";
+			return;
+		}
+		else
+		{
+			bottom_marker = marker;
+		}
+	}
+	Marker top_of_stack = base_pointer + stack_size;
+	U32 top_diff = top_of_stack - top_marker;
+	U32 bot_diff = bottom_marker - base_pointer;
+	size_free = stack_size - (top_diff + bot_diff);
 }
 
 
@@ -71,6 +99,7 @@ void DoubleStack::clear()
 {
 	top_marker = base_pointer + stack_size;
 	bottom_marker = base_pointer;
+	size_free = stack_size;
 }
 
 // Get the amount of bytes free.

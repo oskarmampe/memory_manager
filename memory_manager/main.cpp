@@ -194,7 +194,7 @@ int main()
 			SingleStack::Marker smarker = stack->getMarker();
 			double* test = (double*)stack->alloc(sizeof(double));
 
-			*test = 1.5;
+			*test = 5.23;
 
 			std::cout << "THIRD STACK TEST: " << *test << std::endl;
 
@@ -231,7 +231,7 @@ int main()
 	SmartPointer<SingleStack> stack(new SingleStack(sizeof(int)));
 	int* test = (int*)stack->alloc(sizeof(int));
 
-	*test = 1;
+	*test = 980;
 
 	std::cout << "LAST STACK TEST: " << *test << std::endl;
 
@@ -254,7 +254,7 @@ int main()
 			DoubleStack::Marker smarker = dstack->getMarker(DoubleStack::TOP_STACK);
 			int* test = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
 
-			*test = 1;
+			*test = 76;
 
 			std::cout << "FIRST DOUBLESTACK TEST: " << *test << std::endl;
 
@@ -267,7 +267,7 @@ int main()
 			DoubleStack::Marker smarker = dstack->getMarker(DoubleStack::BOTTOM_STACK);
 			int* test = (int*)dstack->alloc(sizeof(int), DoubleStack::BOTTOM_STACK);
 
-			*test = 1;
+			*test = 54;
 
 			std::cout << "SECOND DOUBLESTACK TEST: " << *test << std::endl;
 			dstack->freeToMarker(smarker, DoubleStack::BOTTOM_STACK);
@@ -283,22 +283,24 @@ int main()
 			int* test1 = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
 
 			*test = 1.5;
-			*test1 = 1.5;
+			*test1 = 154;
 
 			std::cout << "THIRD DOUBLESTACK TEST: " << *test << std::endl;
 			std::cout << "THIRD DOUBLESTACK TEST: " << *test1 << std::endl;
+
+			dstack->clear();
 		}
 
 		// Test whether you can allocate to both stacks
 		{
 
 			DoubleStack::Marker tmarker = dstack->getMarker(DoubleStack::TOP_STACK);
-			DoubleStack::Marker bmarker = dstack->getMarker(DoubleStack::TOP_STACK);
+			DoubleStack::Marker bmarker = dstack->getMarker(DoubleStack::BOTTOM_STACK);
 
 			int* test = (int*)dstack->alloc(sizeof(int), DoubleStack::BOTTOM_STACK);
 			int* test1 = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
 
-			*test = 1;
+			*test = 68;
 
 			std::cout << "FOURTH DOUBLESTACK TEST: " << *test << std::endl;
 			std::cout << "FOURTH DOUBLESTACK TEST: " << *test1 << std::endl;
@@ -315,9 +317,9 @@ int main()
 			SingleStack::Marker smarker = dstack->getMarker(DoubleStack::TOP_STACK);
 			double* test = (double*)dstack->alloc(sizeof(double), DoubleStack::TOP_STACK);
 
-			*test = 1.5;
+			*test = 43.12;
 
-			std::cout << "THIRD DOUBLESTACK TEST: " << *test << std::endl;
+			std::cout << "FIFTH DOUBLESTACK TEST: " << *test << std::endl;
 
 			dstack->freeToMarker(smarker, DoubleStack::TOP_STACK);
 		}
@@ -335,102 +337,103 @@ int main()
 
 			*test2 = 543.0;
 
-			std::cout << "FOURTH DOUBLESTACK TEST: " << *test1 << std::endl;
-			std::cout << "FOURTH DOUBLESTACK TEST: " << *test2 << std::endl;
+			std::cout << "SIXTH DOUBLESTACK TEST: " << *test1 << std::endl;
+			std::cout << "SIXTH DOUBLESTACK TEST: " << *test2 << std::endl;
 
-			dstack->freeToMarker(marker);
+			dstack->freeToMarker(marker, DoubleStack::TOP_STACK);
 			double* test = (double*)dstack->alloc(sizeof(double), DoubleStack::TOP_STACK);
 
 			*test = 234.123;
 
-			std::cout << "FOURTH DOUBLESTACK TEST: " << *test << std::endl;
+			std::cout << "SIXTH DOUBLESTACK TEST: " << *test << std::endl;
 		}
 
 	}//  End of scope to check if smart pointer correctly destructs.
 
 
 	SmartPointer<DoubleStack> dstack(new DoubleStack(sizeof(int)));
-	int* test = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
+	int* dtest = (int*)dstack->alloc(sizeof(int), DoubleStack::TOP_STACK);
 
-	*test = 1;
+	*dtest = 876;
 
-	std::cout << "LAST DOUBLESTACK TEST: " << *test << std::endl;
+	std::cout << "LAST DOUBLESTACK TEST: " << *dtest << std::endl;
 
 
 	// -----------------------------------------------------------
 	// ------------------------ POOL TEST ------------------------
 	// -----------------------------------------------------------
-		// INITIALIZATION
-		// ALLOCATION
-		// CLEAR
-		// FREE
-		// OVERASSIGNING
-		// CLEANUP/SCOPE TEST
+	
+	std::cout << std::endl << "------------------ POOL ALLOCATOR TEST ------------------" << std::endl;
+
 	{
 		SmartPointer<Pool> pool(new Pool(sizeof(int), 3));
 
-		Pool::Node* dtest1 = pool->alloc();
-		int* data = (int*)(dtest1->data);
-		*(data) = 1;
+		// Test whether allocate and free works.
+		{
+			Pool::Node* ptest1 = pool->alloc();
+			int* data = (int*)(ptest1->data);
+			*(data) = 162;
+
+			std::cout << std::endl << "FIRST POOL TEST: " << *(data) <<  std::endl;
+
+			pool->free(ptest1);
+		}
+
+		// Test whether clear works.
+		{
+			Pool::Node* ptest1 = pool->alloc();
+			int* data = (int*)(ptest1->data);
+			*(data) = 847;
 
 
-		Pool::Node* dtest2 = pool->alloc();
-		int* data2 = (int*)(dtest2->data);
-		*(data2) = 2;
+			Pool::Node* ptest2 = pool->alloc();
+			int* data2 = (int*)(ptest2->data);
+			*(data2) = 812;
 
-		Pool::Node* dtest3 = pool->alloc();
-		int* data3 = (int*)(dtest3->data);
-		*(data3) = 3;
+			Pool::Node* ptest3 = pool->alloc();
+			int* data3 = (int*)(ptest3->data);
+			*(data3) = 624;
 
-		std::cout << std::endl << "POOL TEST: " << *(data) << *(data2) << *(data3);
+			std::cout << std::endl << "SECOND POOL TEST: " << *(data)  << std::endl;
+			std::cout << std::endl << "SECOND POOL TEST: " << *(data2) << std::endl;
+			std::cout << std::endl << "SECOND POOL TEST: " << *(data3) << std::endl;
 
-		pool->free(dtest1);
+			pool->clear();
+		}
 
-		SmartPointer<Pool> bvcx = pool;
-
-		std::cout << std::endl << "pointer count: " << pool.getCount() << std::endl;
-
-
-		std::cout << std::endl << "POOL TEST: " << *(data) << *(data2) << *(data3);
-
-		pool->clear();
-
-		std::cout << std::endl << "POOL TEST: " << *(data) << *(data2) << *(data3);
-	}
-
-	{
-		SmartPointer<Pool> pool(new Pool(sizeof(int), 2));
-
-		Pool::Node* dtest1 = pool->alloc();
-		int* data = (int*)(dtest1->data);
-		*(data) = 1;
+		// Test whether freeing in arbitary order works.
+		{
+			Pool::Node* ptest1 = pool->alloc();
+			int* data = (int*)(ptest1->data);
+			*(data) = 543;
 
 
-		Pool::Node* dtest2 = pool->alloc();
-		int* data2 = (int*)(dtest2->data);
-		*(data2) = 2;
+			Pool::Node* ptest2 = pool->alloc();
+			int* data2 = (int*)(ptest2->data);
+			*(data2) = 972;
 
-		// Uncommenting this line breaks the program, as expected.
-		// Pool::Node* dtest4 = pool->alloc();
+			Pool::Node* ptest3 = pool->alloc();
+			int* data3 = (int*)(ptest3->data);
+			*(data3) = 312;
 
-		std::cout << std::endl << "POOL TEST: " << *(data) << *(data2);
+			std::cout << std::endl << "THIRD POOL TEST: " << *(data) << std::endl;
+			std::cout << std::endl << "THIRD POOL TEST: " << *(data2) << std::endl;
+			std::cout << std::endl << "THIRD POOL TEST: " << *(data3) << std::endl;
 
-		pool->free(dtest1);
+			pool->free(ptest3);
+			pool->free(ptest1);
+			pool->free(ptest2);
 
-		Pool::Node* dtest3 = pool->alloc();
-		int* data3 = (int*)(dtest3->data);
-		*(data3) = 36;
+		}
 
-		SmartPointer<Pool> bvcx = pool;
+	}//  End of scope to check if smart pointer correctly destructs.
 
-		std::cout << std::endl << "pointer count: " << pool.getCount() << std::endl;
+	SmartPointer<Pool> pool(new Pool(sizeof(int), 3));
+	Pool::Node* ptest1 = pool->alloc();
+	int* data = (int*)(ptest1->data);
+	*(data) = 1;
 
+	pool->free(ptest1);
 
-		std::cout << std::endl << "POOL TEST: " << *(data) << *(data2);
-
-		pool->clear();
-
-		std::cout << std::endl << "POOL TEST: " << *(data) << *(data2);
-	}
 	return 0;
 }
